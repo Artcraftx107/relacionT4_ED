@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConjuntoOrdenadoABB <T extends Comparable<T>>{
     public static class Nodo<T>{
         T elemento;
@@ -42,5 +45,55 @@ public class ConjuntoOrdenadoABB <T extends Comparable<T>>{
             actual=actual.izq;
         }
         return actual.elemento;
+    }
+
+    public ConjuntoOrdenadoABB<T> diferenciaSimetrica(ConjuntoOrdenadoABB<T> otro){
+        ConjuntoOrdenadoABB<T> result = new ConjuntoOrdenadoABB<>();
+
+        for(T elemento : this.elementos()){
+            if(!otro.contiene(elemento)){
+                result.insertar(elemento);
+            }
+        }
+
+        for(T elemento : otro.elementos()){
+            if(!this.contiene(elemento)){
+                result.insertar(elemento);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean contiene(T elemento) {
+        return contieneRec(raiz, elemento);
+    }
+
+    private boolean contieneRec(Nodo<T> raiz, T elemento) {
+        if(raiz==null){
+            return false;
+        }
+
+        if(elemento.compareTo(raiz.elemento)<0){
+            return contieneRec(raiz.izq, elemento);
+        } else if (elemento.compareTo(raiz.elemento)>0) {
+            return contieneRec(raiz.der, elemento);
+        }else{
+            return true;
+        }
+    }
+
+    public T[] elementos() {
+        List<T> elementos = new ArrayList<>();
+        recorrerEnOrden(raiz, elementos);
+        return (T[]) elementos.toArray();
+    }
+
+    private void recorrerEnOrden(Nodo<T> nodo, List<T> elementos) {
+        if(nodo!=null){
+            recorrerEnOrden(nodo.izq, elementos);
+            elementos.add(nodo.elemento);
+            recorrerEnOrden(nodo.der, elementos);
+        }
     }
 }
